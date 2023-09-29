@@ -1,6 +1,0 @@
-2023/09/22-19:10:08.247 8303 Reusing MANIFEST /Users/gabrielramalho/Desktop/WhatTeX/tokens/WhatTeX/Default/Local Storage/leveldb/MANIFEST-000001
-2023/09/22-19:10:08.247 8303 Recovering log #21
-2023/09/22-19:10:08.247 8303 Reusing old log /Users/gabrielramalho/Desktop/WhatTeX/tokens/WhatTeX/Default/Local Storage/leveldb/000021.log 
-2023/09/22-19:12:09.338 a303 Level-0 table #24: started
-2023/09/22-19:12:09.344 a303 Level-0 table #24: 25043 bytes OK
-2023/09/22-19:12:09.354 a303 Delete type=0 #21

@@ -1,4 +1,5 @@
 "use strict";
+// trust me, this mess is actual real social interactions in reddit. This is the level r/anarchyChess has come to
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -76,12 +77,16 @@ let responseGraph = [
     [3, 16, 21]
 ];
 let peculiarSequence = ["??? call the exorcist!", "actual zombie", "new response just dropped", "holy hell", "google en passant"];
-const greet = (client) => {
-    let inPeculiarSequence = false;
-    client.onMessage((message) => __awaiter(void 0, void 0, void 0, function* () {
+let inPeculiarSequence = false;
+const anarchyChess = {
+    type: "onMessage",
+    allowSeriousGroups: false,
+    func: (client, message) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(message.body);
         if (message.body === undefined)
             return;
         let index = responses.findIndex(elmt => message.body.toLowerCase().includes(elmt.toLowerCase()));
+        console.log(message.body);
         if (index === -1)
             return;
         if (index === 14) {
@@ -92,12 +97,15 @@ const greet = (client) => {
                 let response = peculiarSequence[++inPeculiarSequence];
                 client.sendText(message.chatId, response);
                 inPeculiarSequence++;
+                console.log(message.body);
                 return;
             }
         }
         let possibleResponses = responseGraph[index];
         let response = responses[possibleResponses[Math.floor(Math.random() * possibleResponses.length)]];
+        console.log(message.body);
+        console.log(message.chatId, message.from);
         client.sendText(message.chatId, response);
-    }));
+    })
 };
-exports.default = greet;
+exports.default = anarchyChess;

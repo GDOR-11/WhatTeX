@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("../utils");
-const renderLaTeX = (client) => {
-    client.onAnyMessage(message => {
+const renderLaTeX = {
+    type: "onAnyMessage",
+    allowSeriousGroups: true,
+    func: (client, message) => {
         if (message.body === undefined)
             return;
         if (!message.body.toLowerCase().startsWith("!renderlatex\n"))
@@ -14,7 +16,7 @@ const renderLaTeX = (client) => {
         if (message.sender.isMe) {
             client.deleteMessage(message.chatId, message.id);
         }
-    });
+    }
 };
 function textToLatex(text) {
     let sections = typeof text === "string" ? text.split("\n") : text;
