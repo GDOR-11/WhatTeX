@@ -5,9 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node build/index.js",
-    "compile": "tsc",
-    "build": "npm run compile && npm run run"
+    "run": "node .",
+    "build": "tsc",
+    "start": "npm run build && npm run run"
   },
   "keywords": [
     "whatsapp",

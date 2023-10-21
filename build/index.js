@@ -22,12 +22,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const wppconnect = __importStar(require("@wppconnect-team/wppconnect"));
-const fs_1 = __importDefault(require("fs"));
+const promises_1 = __importDefault(require("fs/promises"));
+const readline_1 = __importDefault(require("readline"));
 wppconnect.create({
     session: "WhatTeX",
     autoClose: 0
@@ -39,15 +49,16 @@ let messageListeners = [
     require("./messageListeners/anarchyChess").default,
     require("./messageListeners/presentMyself").default,
     require("./messageListeners/homenagemProfessores").default,
-    require("./messageListeners/quemPerguntou").default
+    require("./messageListeners/quemPerguntou").default,
+    require("./messageListeners/bruh").default,
+    require("./messageListeners/communism").default
 ];
 let unseriousGroups = [];
-fs_1.default.readFile("./unseriousGroups.txt", { encoding: "utf8" }, (error, data) => {
-    if (error) {
-        console.error(error);
-        process.exit(1);
-    }
+promises_1.default.readFile("./unseriousGroups.txt", { encoding: "utf8" }).then(data => {
     unseriousGroups = data.split("\n");
+}).catch(error => {
+    console.error(error);
+    process.exit(1);
 });
 function start(client) {
     for (let messageListener of messageListeners) {
@@ -72,19 +83,28 @@ function start(client) {
             return;
         if (!message.sender.isMe)
             return;
-        if (message.body === "!setGroupAsUnserious" && !unseriousGroups.includes(message.chatId))
+        if (message.body === "!allowBot" && !unseriousGroups.includes(message.chatId))
             unseriousGroups.push(message.chatId);
-        if (message.body === "!setGroupAsSerious") {
+        if (message.body === "!disallowBot") {
             let idx = unseriousGroups.indexOf(message.chatId);
             if (idx === -1)
                 return;
             unseriousGroups.splice(idx, 1);
         }
     });
-    process.on("exit", () => {
-        console.log("writing data to unseriousGroups.txt...");
-        fs_1.default.writeFileSync("./unseriousGroups.txt", unseriousGroups.join("\n"));
-        console.log("successfully saved unserious groups to file!");
-        process.exit(0);
-    });
+    const rl = readline_1.default.createInterface(process.stdin);
+    rl.on("line", (line) => __awaiter(this, void 0, void 0, function* () {
+        if (line.toLowerCase() === "q") {
+            try {
+                console.log("Writing data to unseriousGroups.txt...");
+                yield promises_1.default.writeFile("./unseriousGroups.txt", unseriousGroups.join("\n"));
+            }
+            catch (err) {
+                console.error(`Could not save data:\n\n${err}\n`);
+                console.error(`If the issue persists, exit with Control+C and manually write the following data to unseriousGroups.txt:\n${unseriousGroups.join("\n")}`);
+            }
+            yield client.logout();
+            process.exit(0);
+        }
+    }));
 }

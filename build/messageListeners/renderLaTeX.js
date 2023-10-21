@@ -11,7 +11,8 @@ const renderLaTeX = {
             return;
         let sections = message.body.split("\n");
         sections.shift();
-        let link = textToLatex(sections);
+        let link;
+        link = textToLatex(sections);
         (0, utils_1.sendImageFromLink)(client, message.chatId, link, undefined, undefined, message.quotedMsgId || undefined);
         if (message.sender.isMe) {
             client.deleteMessage(message.chatId, message.id, false); // delete globally

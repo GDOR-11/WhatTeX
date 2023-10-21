@@ -13,12 +13,7 @@ const renderLaTeX: MessageListener = {
         let sections = message.body.split("\n");
         sections.shift();
         let link: string;
-        try {
-            link = textToLatex(sections);
-        } catch(err) {
-            client.sendText(message.chatId, "Error while rendering LaTeX:\n\n" + err);
-            return;
-        }
+        link = textToLatex(sections);
         sendImageFromLink(client, message.chatId, link, undefined, undefined, message.quotedMsgId || undefined);
 
         if(message.sender.isMe) {
@@ -33,7 +28,6 @@ function textToLatex(text: string | string[]): string {
 
     let latex_code = "";
     for(let section of sections) {
-        if(section.match(/\p{Diacritic}/u) !== null) throw Error("Cannot render accentuated characters");
         latex_code += "\\\\\\text{" + section + "}";
     }
     return "https://latex.codecogs.com/png.image?\\dpi{300}" + latex_code;

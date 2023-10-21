@@ -1,6 +1,7 @@
 import * as wppconnect from "@wppconnect-team/wppconnect";
 import MessageListener from "./messageListeners/MessageListener";
-import fs from "fs";
+import fs from "fs/promises";
+import readline from "readline";
 
 wppconnect.create({
     session: "WhatTeX",
@@ -15,17 +16,19 @@ let messageListeners: MessageListener[] = [
     require("./messageListeners/anarchyChess").default,
     require("./messageListeners/presentMyself").default,
     require("./messageListeners/homenagemProfessores").default,
-    require("./messageListeners/quemPerguntou").default
+    require("./messageListeners/quemPerguntou").default,
+    require("./messageListeners/bruh").default,
+    require("./messageListeners/communism").default
 ];
 
 let unseriousGroups: string[] = [];
-fs.readFile("./unseriousGroups.txt", { encoding: "utf8" }, (error, data) => {
-    if(error) {
-        console.error(error);
-        process.exit(1);
-    }
+fs.readFile("./unseriousGroups.txt", { encoding: "utf8" }).then(data => {
     unseriousGroups = data.split("\n");
+}).catch(error => {
+    console.error(error);
+    process.exit(1);
 });
+
 
 function start(client: wppconnect.Whatsapp) {
     for(let messageListener of messageListeners) {
@@ -48,19 +51,31 @@ function start(client: wppconnect.Whatsapp) {
         if(message.body === undefined) return;
         if(!message.sender.isMe) return;
 
-        if(message.body === "!setGroupAsUnserious" && !unseriousGroups.includes(message.chatId)) unseriousGroups.push(message.chatId);
+        if(message.body === "!allowWhatTeX" && !unseriousGroups.includes(message.chatId)) {
+            unseriousGroups.push(message.chatId);
+            client.sendText(message.chatId, "WhatTeX has been activated. Use !disallowWhatTeX to deactivate.");
+        }
 
-        if(message.body === "!setGroupAsSerious") {
+        if(message.body === "!disallowWhatTeX") {
             let idx = unseriousGroups.indexOf(message.chatId);
             if(idx === -1) return;
             unseriousGroups.splice(idx, 1);
+            client.sendText(message.chatId, "WhatTeX has been deactivated. Use !allowWhatTeX to reactivate.");
         }
     });
 
-    process.on("exit", () => {
-        console.log("writing data to unseriousGroups.txt...");
-        fs.writeFileSync("./unseriousGroups.txt", unseriousGroups.join("\n"));
-        console.log("successfully saved unserious groups to file!");
-        process.exit(0);
+    const rl = readline.createInterface(process.stdin);
+    rl.on("line", async line => {
+        if(line.toLowerCase() === "q") {
+            try {
+                console.log("Writing data to unseriousGroups.txt...");
+                await fs.writeFile("./unseriousGroups.txt", unseriousGroups.join("\n"));
+            } catch(err) {
+                console.error(`Could not save data:\n\n${err}\n`);
+                console.error(`If the issue persists, exit with Control+C and manually write the following data to unseriousGroups.txt:\n${unseriousGroups.join("\n")}`);
+            }
+            await client.logout();
+            process.exit(0);
+        }
     });
 }
