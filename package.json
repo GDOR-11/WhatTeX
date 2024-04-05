@@ -1,0 +1,26 @@
+{
+  "name": "whattex",
+  "version": "1.0.0",
+  "description": "my whatsapp bot",
+  "type": "module",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "rm -rf tokens && node .",
+    "build": "rm -rf build && tsc",
+    "start": "npm run build && npm run run"
+  },
+  "keywords": [
+    "whatsapp",
+    "latex",
+    "wppconnect"
+  ],
+  "author": "Gabril Ramalho",
+  "license": "WTFPL",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@wppconnect-team/wppconnect": "^1.28.0"
+  }
+}
