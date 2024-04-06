@@ -88,6 +88,8 @@ function start(client: wppconnect.Whatsapp) {
     });
 
     beforeExitAsync(async _signal => {
+        console.log("saving data to unseriousGroups.txt...");
+        await fs.writeFile("./unseriousGroups.txt", unseriousGroups.join("\n"));
         console.log("Logging out...");
         await client.logout();
     });
