@@ -1,16 +1,15 @@
 import * as wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./messageListeners/MessageListener.js";
 import { beforeExitAsync } from "./beforeExit.js";
 import fs from "fs/promises";
 
 
-let unseriousGroups: string[] =
+let unseriousGroups =
     (await fs.readFile("./unseriousGroups.txt", { encoding: "utf8" }))
     .split("\n").filter(str => str.match(/^\d+@[cg].us$/) !== null); 
 
-setInterval(fs.writeFile, 600000, "./unseriousGroups.txt", unseriousGroups.join("\n"));
+setInterval(() => fs.writeFile("./unseriousGroups.txt", unseriousGroups.join("\n")), 600000);
 
-let messageListeners: MessageListener[] = [
+let messageListeners = [
     (await import("./messageListeners/greet.js")).default,
     (await import("./messageListeners/helloThere.js")).default,
     (await import("./messageListeners/renderLaTeX.js")).default,
