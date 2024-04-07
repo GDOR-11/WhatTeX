@@ -89,6 +89,18 @@ function start(client: wppconnect.Whatsapp) {
     });
 
     client.onAnyMessage(async message => {
+        if(message.type !== wppconnect.MessageType.CHAT || !message.sender.isMe) return;
+        if(message.body === "!getUnseriousGroups") {
+            let response = "";
+            for(let chatId of unseriousGroups) {
+                let chat = await client.getChatById(chatId);
+                response += `${chat.contact.formattedName} (${chatId})\n`;
+            }
+            await client.sendText(message.chatId, response.slice(0, -1));
+        }
+    });
+
+    client.onAnyMessage(async message => {
         if(message.type !== wppconnect.MessageType.CHAT) return;
 
         if(message.body === "!ajuda" || message.body === "!help") {
