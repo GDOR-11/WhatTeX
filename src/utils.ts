@@ -18,10 +18,10 @@ export function fileExists(filename: string): Promise<boolean> {
     return new Promise(resolve => fs.stat(filename, (err, _stats) => resolve(err === null)));
 }
 
-export async function generateUnusedFilename(extension: string): Promise<string> {
-    let file: string = `temp.${extension}`;
+export async function generateUnusedFilename(fileType: string): Promise<string> {
+    let file: string = `temp.${fileType}`;
     while(await fileExists(file)) {
-        file += Math.random() + `.${extension}`;
+        file += Math.random() + `.${fileType}`;
     }
     return file;
 }

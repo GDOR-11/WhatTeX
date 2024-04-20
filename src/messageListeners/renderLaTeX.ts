@@ -1,20 +1,27 @@
 import * as wppconnect from "@wppconnect-team/wppconnect";
 import MessageListener from "./MessageListener.js";
+import { downloadFileFromLink, generateUnusedFilename } from "../utils.js";
+import fs from "fs/promises";
 
 const renderLaTeX: MessageListener = {
     unseriousGroupsOnly: false,
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: _caller => true,
-    listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
-        let match = message.body.toLowerCase().match(/!render[lL]a[tT]e[xX]\n(.*)/s);
+    listener: async (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
+        let match = message.body.match(/!render[lL]a[tT]e[xX] (.*)\n(.*)/s);
         if(match === null) return;
 
-        let link = textToLatexLink(match[1]);
-        client.sendImage(message.chatId, link, undefined, undefined, message.quotedMsgId || undefined);
+        const [caption, latex] = [match[1], match[2]];
 
-        if(message.sender.isMe) {
-            client.deleteMessage(message.chatId, message.id, false); // delete globally
-        }
+        const link = textToLatexLink(latex);
+
+        const filepath = await generateUnusedFilename("png");
+        await downloadFileFromLink(filepath, link);
+
+        await client.sendImage(message.chatId, filepath, undefined, caption, message.quotedMsgId || undefined);
+        if(message.sender.isMe) await client.deleteMessage(message.chatId, message.id, false);
+
+        await fs.unlink(filepath);
     },
     helpMessage: "comece uma mensagem com !renderlatex e uma quebra de linha que o resto será renderizado em LaTeX"
 };

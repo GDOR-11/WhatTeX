@@ -61,7 +61,7 @@ function start(client: wppconnect.Whatsapp) {
     client.onAnyMessage(async message => {
         if(message.type !== wppconnect.MessageType.CHAT || !message.sender.isMe) return;
 
-        let permissionMatch = message.body.match(/^!(dis)?allowWhatTeX([ \n]\d+@[cg]\.us)?/);
+        let permissionMatch = message.body.match(/^!(dis)?allowWhatTeX([ \n]\d+@[cg]\.us)?$/);
         if(permissionMatch === null) return;
 
         let id = permissionMatch[2]?.slice(1) || message.chatId;
