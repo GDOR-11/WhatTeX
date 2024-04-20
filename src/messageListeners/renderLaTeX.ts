@@ -8,10 +8,11 @@ const renderLaTeX: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: _caller => true,
     listener: async (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
-        let match = message.body.match(/!render[lL]a[tT]e[xX] ([^\n]*)\n(.*)/s);
+        let match = message.body.match(/!render[lL]a[tT]e[xX](:? ([^\n]*))?\n(.*)/s);
         if(match === null) return;
 
-        const [caption, latex] = [match[1], match[2]];
+        const caption: string | undefined = match[1];
+        const latex: string = match[2];
 
         const link = textToLatexLink(latex);
 
