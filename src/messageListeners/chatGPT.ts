@@ -59,13 +59,18 @@ const GPTLoader = (async () => {
 
     console.log("chatGPT ready!");
 
+    async function getLastResponse(): Promise<import("puppeteer").ElementHandle> {
+        let children = await page.$$(".pb-9 > .w-full > * > *");
+        return children[children.length - 1];
+    }
+
     // array of prompts and callbacks
     let promptQueue: [string, (value: string) => Promise<void>][] = [];
 
     (async () => {
         while(true) {
             let prompt = promptQueue.shift();
-            if(prompt == undefined) {
+            if(prompt === undefined) {
                 await new Promise(r => setTimeout(r, 1000));
                 continue;
             }
@@ -79,25 +84,20 @@ const GPTLoader = (async () => {
 
             // wait until GPT is done cooking
             await new Promise(r => setTimeout(r, 1000))
-            while(!await (await page.$(".final-completion"))?.$(".pr-2")) {
+            const lastResponse = await getLastResponse();
+            while(await lastResponse.$(".pr-2") === null) {
                 await new Promise(r => setTimeout(r, 1000));
             }
 
-            // get response
-            let response = await page.$(".final-completion");
-            let responseSize = await response?.boundingBox();
-            if(!response || !responseSize) {
-                // if response or its size are not avaible, shit happened. Take a screenshot, close the browser and throw an error
-                await page.screenshot({ path: "error.png" });
-                await browser.close();
-                throw "error while getting final chatGPT completion";
-            }
+            // screenshot response
+            let responseSize = await lastResponse.boundingBox();
+            if(!responseSize) throw "lastResponse.boundingBox returned null in messageListeners/chatGPT.ts line 93";
             await page.setViewport({
                 width: 1500,
                 height: responseSize.height + 500
             });
             let path = await generateUnusedFilename("png");
-            await response.screenshot({ path });
+            await lastResponse.screenshot({ path });
             await prompt[1](path);
             await fs.unlink(path);
         }
