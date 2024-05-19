@@ -3,7 +3,7 @@ import MessageListener from "./MessageListener.js";
 import path from "path";
 import fs from "fs";
 
-const communism_words = ["comunismo", "comunista", "communist", "commie", "communism", "socialist", "socialism", "soviético", "soviet", "urss", "ussr", "cccp", "lulista", " pt ", "partido dos trabalhadores", "karl", "marx", "carlos marcos", "lula", "dilma", "roussef", "haddad", "russia", "rússia", "comrade", "vermelh", "red", "companhero", "companheiro"];
+const communism_words = ["comunismo", "comunista", "communist", "commie", "communism", "socialist", "socialism", "soviético", "soviet", "urss", "ussr", "cccp", "lulista", " pt ", "partido dos trabalhadores", "karl", "marx", "carlos marcos", "lula", "dilma", "roussef", "haddad", "russia", "rússia", "comrade", "vermelh", "red", "companhero", "companheiro", "faz o l"];
 
 const communism: MessageListener = {
     unseriousGroupsOnly: true,

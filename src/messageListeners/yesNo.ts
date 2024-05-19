@@ -9,7 +9,7 @@ const yesNoPairs: [string, string][] = [
     ["yeah", "nah"],
     ["yup", "nope"],
     ["yes", "no"],
-    ["ja", "nein"],
+    ["ja", "nein"]
 ];
 
 const yesNo: MessageListener = {

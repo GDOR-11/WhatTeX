@@ -91,7 +91,7 @@ const GPTLoader = (async () => {
 
             // screenshot response
             let responseSize = await lastResponse.boundingBox();
-            if(!responseSize) throw "lastResponse.boundingBox returned null in messageListeners/chatGPT.ts line 93";
+            if(responseSize === null) throw "lastResponse.boundingBox() returned null in messageListeners/chatGPT.ts line 93";
             await page.setViewport({
                 width: 1500,
                 height: responseSize.height + 500
