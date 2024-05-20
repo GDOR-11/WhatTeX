@@ -7,12 +7,12 @@ const shutdown: MessageListener = {
     callerHasPermission: caller => caller.isMe,
     listener: async (client, message) => {
         switch(message.body.toLowerCase()) {
-            case "!shudown":
+            case "!shutdown":
                 await client.sendText(message.chatId, "shutting down WhatTeX bot...");
             case "!quickshutdown":
                 process.emit("SIGINT");
                 break;
-            case "!forceshotdown":
+            case "!forceshutdown":
                 process.exit(0);
         }
     },
