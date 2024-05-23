@@ -1,12 +1,12 @@
 import wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./MessageListener.js";
+import MessageListener from "../MessageListener.js";
 
 const shutdown: MessageListener = {
     unseriousGroupsOnly: false,
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => caller.isMe,
     listener: async (client, message) => {
-        switch(message.body.toLowerCase()) {
+        switch (message.body.toLowerCase()) {
             case "!shutdown":
                 await client.sendText(message.chatId, "shutting down WhatTeX bot...");
             case "!quickshutdown":

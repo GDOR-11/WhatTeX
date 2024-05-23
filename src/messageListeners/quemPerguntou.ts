@@ -1,5 +1,5 @@
 import wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./MessageListener.js";
+import MessageListener from "../MessageListener.js";
 
 const quemPerguntou: MessageListener = {
     unseriousGroupsOnly: true,
@@ -7,7 +7,7 @@ const quemPerguntou: MessageListener = {
     callerHasPermission: caller => !caller.isMe,
     listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
         let lowerCaseMessage = message.body.toLowerCase();
-        if(lowerCaseMessage == "quem?" || lowerCaseMessage == "quem") {
+        if (lowerCaseMessage == "quem?" || lowerCaseMessage == "quem") {
             client.sendText(message.chatId, "pergunto", { quotedMsg: message.id });
         }
     },

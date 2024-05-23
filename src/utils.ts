@@ -1,6 +1,8 @@
 import fs from "fs";
 import https from "https";
 
+export type ChatId = `${number}@g.us` | `${number}@c.us`
+
 export function downloadFileFromLink(filename: string, URL: string): Promise<void> {
     return new Promise(resolve => {
         let file = fs.createWriteStream(filename);
@@ -20,7 +22,7 @@ export function fileExists(filename: string): Promise<boolean> {
 
 export async function generateUnusedFilename(fileType: string): Promise<string> {
     let file: string = `temp.${fileType}`;
-    while(await fileExists(file)) {
+    while (await fileExists(file)) {
         file += Math.random() + `.${fileType}`;
     }
     return file;

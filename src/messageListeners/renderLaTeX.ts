@@ -1,6 +1,6 @@
 import * as wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./MessageListener.js";
-import { downloadFileFromLink, generateUnusedFilename } from "../utils.js";
+import MessageListener from "../MessageListener.js";
+import * as utils from "../utils.js";
 import fs from "fs/promises";
 
 const renderLaTeX: MessageListener = {
@@ -9,18 +9,18 @@ const renderLaTeX: MessageListener = {
     callerHasPermission: _caller => true,
     listener: async (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
         let match = message.body.match(/^!render[lL]a[tT]e[xX](?: ([^\n]*))?\n(.*)/s);
-        if(match === null) return;
+        if (match === null) return;
 
         const caption: string | undefined = match[1];
         const latex: string = match[2];
 
         const link = textToLatexLink(latex);
 
-        const filepath = await generateUnusedFilename("png");
-        await downloadFileFromLink(filepath, link);
+        const filepath = await utils.generateUnusedFilename("png");
+        await utils.downloadFileFromLink(filepath, link);
 
-        await client.sendImage(message.chatId, filepath, undefined, caption, message.quotedMsgId || undefined);
-        if(message.sender.isMe) await client.deleteMessage(message.chatId, message.id, false);
+        await client.sendImage(message.chatId, filepath, undefined, caption, message.quotedMsgId ?? undefined);
+        if (message.sender.isMe) await client.deleteMessage(message.chatId, message.id, false);
 
         await fs.unlink(filepath);
     },
@@ -31,7 +31,7 @@ function textToLatexLink(text: string): string {
     let sections = text.split("\n");
 
     let latex_code = "";
-    for(let section of sections) {
+    for (let section of sections) {
         latex_code += "\\\\\\text{" + section + "}";
     }
     return "https://latex.codecogs.com/png.image?\\dpi{300}" + latex_code;

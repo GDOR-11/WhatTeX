@@ -1,5 +1,5 @@
 import wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./MessageListener.js";
+import MessageListener from "../MessageListener.js";
 import path from "path";
 import fs from "fs";
 
@@ -12,8 +12,8 @@ const communism: MessageListener = {
     listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
         let lowerCase = message.body.toLowerCase();
 
-        for(let word of communism_words) {
-            if(lowerCase.includes(word)) {
+        for (let word of communism_words) {
+            if (lowerCase.includes(word)) {
                 sendRandomCommunistSticker(client, message.chatId);
                 return;
             }
@@ -30,25 +30,25 @@ const sendRandomCommunistSticker = (() => {
     const communistStickersFolder = "./images/communism";
 
     /** all the communism requests that have been made before the files have been read */
-    let pendingMessages: {client: wppconnect.Whatsapp, recipient: string}[] = [];
+    let pendingMessages: { client: wppconnect.Whatsapp, recipient: string }[] = [];
 
-    let communistStickers: {path: string, content: string}[] = [];
+    let communistStickers: { path: string, content: string }[] = [];
 
     const mimeTypeOf = (file: string) => {
         let split = file.split(".");
         return "image/" + split[split.length - 1];
     };
     fs.readdir(communistStickersFolder, (err, files) => {
-        if(err) {
+        if (err) {
             console.error(err);
             process.emit("SIGINT");
         }
 
         communistStickers.length = files.length;
-        for(let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             let filepath = path.join(communistStickersFolder, files[i]);
             fs.readFile(filepath, { encoding: "base64" }, (err, base64) => {
-                if(err) {
+                if (err) {
                     console.error(err);
                     process.emit("SIGINT");
                 }
@@ -57,7 +57,7 @@ const sendRandomCommunistSticker = (() => {
             });
         }
 
-        for(let pendingMessage of pendingMessages) sendRandomCommunistSticker(pendingMessage.client, pendingMessage.recipient);
+        for (let pendingMessage of pendingMessages) sendRandomCommunistSticker(pendingMessage.client, pendingMessage.recipient);
     });
 
     /** this function should only ever be called after communistStickers has been set */
@@ -65,7 +65,7 @@ const sendRandomCommunistSticker = (() => {
         let stickerIndex = Math.floor(communistStickers.length * Math.random());
         let sticker = communistStickers[stickerIndex];
 
-        if(sticker.path.endsWith(".gif")) {
+        if (sticker.path.endsWith(".gif")) {
             client.sendImageAsStickerGif(recipient, sticker.content);
         } else {
             client.sendImageAsSticker(recipient, sticker.content);
@@ -73,8 +73,8 @@ const sendRandomCommunistSticker = (() => {
     }
 
     return (client: wppconnect.Whatsapp, recipient: string) => {
-        if(!communistStickers) {
-            pendingMessages.push({client, recipient});
+        if (!communistStickers) {
+            pendingMessages.push({ client, recipient });
         } else {
             sendRandomCommunistSticker(client, recipient);
         }

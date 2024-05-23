@@ -1,4 +1,4 @@
-import MessageListener from "./MessageListener.js";
+import MessageListener from "../MessageListener.js";
 import { beforeExitAsync } from "../beforeExit.js";
 import wppconnect from "@wppconnect-team/wppconnect";
 
@@ -20,7 +20,7 @@ const GPTLoader = (async () => {
     const page = await browser.newPage();
 
     beforeExitAsync(async signal => {
-        if(signal == "uncaughtExpection") {
+        if (signal == "uncaughtExpection") {
             await page.screenshot({ path: "./error.png" });
         }
         await browser.close();
@@ -32,15 +32,15 @@ const GPTLoader = (async () => {
         page.waitForSelector("[data-testid=\"login-button\"]"),
         page.waitForSelector("#prompt-textarea")
     ]);
-    if(element === null) throw "this isn't even supposed to be possible, what the fuck (messageListeners/chatGPT.ts, line 35)";
+    if (element === null) throw "this isn't even supposed to be possible, what the fuck (messageListeners/chatGPT.ts, line 35)";
 
     // if we got the button, we still need to log in
-    if(await (await element.getProperty("tagName")).jsonValue() === "BUTTON") {
+    if (await (await element.getProperty("tagName")).jsonValue() === "BUTTON") {
         console.log("logging into OpenAI account...");
 
         await page.click("[data-testid=\"login-button\"]");
 
-        if(!process.env["CHATGPT_EMAIL"] || !process.env["CHATGPT_PASSWORD"]) {
+        if (!process.env["CHATGPT_EMAIL"] || !process.env["CHATGPT_PASSWORD"]) {
             throw "CHATGPT_EMAIL and CHATGPT_PASSWORD environment variables not set!";
         }
 
@@ -68,9 +68,9 @@ const GPTLoader = (async () => {
     let promptQueue: [string, (value: string) => Promise<void>][] = [];
 
     (async () => {
-        while(true) {
+        while (true) {
             let prompt = promptQueue.shift();
-            if(prompt === undefined) {
+            if (prompt === undefined) {
                 await new Promise(r => setTimeout(r, 1000));
                 continue;
             }
@@ -85,13 +85,13 @@ const GPTLoader = (async () => {
             // wait until GPT is done cooking
             await new Promise(r => setTimeout(r, 1000))
             const lastResponse = await getLastResponse();
-            while(await lastResponse.$(".pr-2") === null) {
+            while (await lastResponse.$(".pr-2") === null) {
                 await new Promise(r => setTimeout(r, 1000));
             }
 
             // screenshot response
             let responseSize = await lastResponse.boundingBox();
-            if(responseSize === null) throw "lastResponse.boundingBox() returned null in messageListeners/chatGPT.ts line 93";
+            if (responseSize === null) throw "lastResponse.boundingBox() returned null in messageListeners/chatGPT.ts line 93";
             await page.setViewport({
                 width: 1500,
                 height: responseSize.height + 500
@@ -102,7 +102,7 @@ const GPTLoader = (async () => {
             await fs.unlink(path);
         }
     })();
-    
+
     return function sendResponseImage(client: wppconnect.Whatsapp, to: string, prompt: string): Promise<void> {
         return new Promise(resolve => {
             promptQueue.push([prompt, async (filename: string) => {
@@ -122,8 +122,8 @@ const chatGPT: MessageListener = {
     callerHasPermission: _caller => true,
     listener: async (client, message) => {
         let match = message.body.match(/^!ask[gG][pP][tT]\n(.*)/s);
-        if(match === null) return;
-        if(sendResponseImage === null) return;
+        if (match === null) return;
+        if (sendResponseImage === null) return;
 
         await sendResponseImage(client, message.chatId, match[1]);
     },

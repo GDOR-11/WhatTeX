@@ -1,5 +1,5 @@
 import wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./MessageListener.js";
+import MessageListener from "../MessageListener.js";
 
 const getChatId: MessageListener = {
     unseriousGroupsOnly: false,
@@ -7,7 +7,7 @@ const getChatId: MessageListener = {
     callerHasPermission: caller => caller.isMe,
     listener: async (client, message) => {
         const match = message.body.match(/^!get[cC]hat[iI][dD]s?[ \n](.*)$/);
-        if(match === null) return;
+        if (match === null) return;
 
         const regex = match[1];
         let chats = await client.listChats();

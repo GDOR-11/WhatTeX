@@ -1,5 +1,5 @@
 import wppconnect from "@wppconnect-team/wppconnect";
-import MessageListener from "./MessageListener.js";
+import MessageListener from "../MessageListener.js";
 
 const repeat: MessageListener = {
     unseriousGroupsOnly: false,
@@ -7,16 +7,16 @@ const repeat: MessageListener = {
     callerHasPermission: caller => caller.isMe,
     listener: (client, message) => {
         let match = message.body.match(/^!repeat (\d+)\n(.*)/s);
-        if(match === null) return;
+        if (match === null) return;
 
-        let [repetitions, messageToRepeat] = [ Number(match[1]), match[2] ];
+        let [repetitions, messageToRepeat] = [Number(match[1]), match[2]];
 
-        if(repetitions > 1000) {
+        if (repetitions > 1000) {
             client.sendText(message.chatId, "fuck you, I'm not repeating it that many times");
             return;
         }
 
-        for(let i = 0;i < repetitions;i++) {
+        for (let i = 0; i < repetitions; i++) {
             client.sendText(message.chatId, messageToRepeat);
         }
     },
