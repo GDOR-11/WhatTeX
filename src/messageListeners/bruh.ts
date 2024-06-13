@@ -6,7 +6,7 @@ const bruh: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client, message) => {
-        if (!message.body.toLowerCase().includes("bruh")) return;
+        if (!message.body?.toLowerCase().includes("bruh")) return;
 
         for (let i = 0; i < 10; i++) {
             client.sendText(message.chatId, "bruh");

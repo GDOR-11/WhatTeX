@@ -6,7 +6,7 @@ const helloThere: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
-        if (message.body.toLowerCase() == "hello there") {
+        if (message.body?.toLowerCase() == "hello there") {
             client.sendText(message.chatId, "General Kenobi");
         }
     },

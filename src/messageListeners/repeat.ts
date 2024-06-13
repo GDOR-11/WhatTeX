@@ -6,8 +6,8 @@ const repeat: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => caller.isMe,
     listener: (client, message) => {
-        let match = message.body.match(/^!repeat (\d+)\n(.*)/s);
-        if (match === null) return;
+        let match = message.body?.match(/^!repeat (\d+)\n(.*)/s);
+        if (!match) return;
 
         let [repetitions, messageToRepeat] = [Number(match[1]), match[2]];
 
@@ -20,7 +20,7 @@ const repeat: MessageListener = {
             client.sendText(message.chatId, messageToRepeat);
         }
     },
-    helpMessage: "comece uma mensagem com \"!repeat <n>\" e uma quebra de linha e eu vou repetir o que vier em baixo n vezes"
+    helpMessage: "comece uma mensagem com \"!repeat <n>\" e uma quebra de linha e eu vou repetir o que vier em baixo n vezes (restrito ao dono do bot pq vcs sao um bando de irresponsavel)"
 };
 
 export default repeat;

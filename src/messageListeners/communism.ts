@@ -10,6 +10,7 @@ const communism: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: _caller => true,
     listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
+        if (!message.body) return;
         let lowerCase = message.body.toLowerCase();
 
         for (let word of communism_words) {

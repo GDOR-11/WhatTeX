@@ -6,7 +6,7 @@ const greet: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
-        if (message.body.toLowerCase().includes("esquizofrenia")) {
+        if (message.body?.toLowerCase().includes("esquizofrenia")) {
             client.sendText(message.chatId, "Bom dia, meu nome é esquizofrenia. Como posso lhe ajudar hoje?");
         }
     },

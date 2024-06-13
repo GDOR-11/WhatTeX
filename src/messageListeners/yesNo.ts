@@ -17,6 +17,7 @@ const yesNo: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client, message) => {
+        if (!message.body) return;
         let body = message.body.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         for (let pair of yesNoPairs) {
             let msg = "";

@@ -79,6 +79,7 @@ const anarchyChess: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: async (client, message) => {
+        if (message.body === undefined) return;
         let lowerCaseMessage = message.body.toLowerCase();
 
         let index = responses.indexOf(lowerCaseMessage);

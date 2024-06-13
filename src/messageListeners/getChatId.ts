@@ -6,8 +6,8 @@ const getChatId: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => caller.isMe,
     listener: async (client, message) => {
-        const match = message.body.match(/^!get[cC]hat[iI][dD]s?[ \n](.*)$/);
-        if (match === null) return;
+        const match = message.body?.match(/^!get[cC]hat[iI][dD]s?[ \n](.*)$/);
+        if (!match) return;
 
         const regex = match[1];
         let chats = await client.listChats();

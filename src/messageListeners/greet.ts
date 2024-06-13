@@ -16,6 +16,7 @@ const greet: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client, message) => {
+        if (!message.body) return;
         let lowerCase = message.body.toLowerCase();
         for (let greeting of greetings) {
             if (lowerCase.match(greeting) !== null) {

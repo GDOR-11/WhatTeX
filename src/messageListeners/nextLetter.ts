@@ -11,6 +11,7 @@ const nextLetter: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client, message) => {
+        if (!message.body) return;
         let index = alphabet.indexOf(message.body.toLowerCase());
         if (index === -1) return;
 

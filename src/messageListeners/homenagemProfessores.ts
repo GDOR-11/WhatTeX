@@ -20,6 +20,7 @@ const homenagemProfessores: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client: wppconnect.Whatsapp, message: wppconnect.Message) => {
+        if (!message.body) return;
         let lowerCaseMessage = message.body.toLowerCase();
 
         for (let key in responses) {

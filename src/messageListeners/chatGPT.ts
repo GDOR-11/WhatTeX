@@ -121,13 +121,13 @@ const chatGPT: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: _caller => true,
     listener: async (client, message) => {
-        let match = message.body.match(/^!ask[gG][pP][tT]\n(.*)/s);
-        if (match === null) return;
+        let match = message.body?.match(/^!ask[gG][pP][tT]\n(.*)/s);
+        if (!match) return;
         if (sendResponseImage === null) return;
 
         await sendResponseImage(client, message.chatId, match[1]);
     },
-    helpMessage: "Comece uma mensagem com !gpt e uma quebra de linha que o chat GPT te respondera"
+    helpMessage: "Comece uma mensagem com !askgpt e uma quebra de linha que o chat GPT te respondera"
 };
 
 export default chatGPT;

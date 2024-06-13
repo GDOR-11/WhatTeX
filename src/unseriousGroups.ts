@@ -38,8 +38,8 @@ const unseriousGroupsListener: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     listener: async (client, message) => {
         await (async () => {
-            const permissionMatch = message.body.match(/^!(dis)?allowWhatTeX([ \n]\d+@[cg]\.us)?$/);
-            if (permissionMatch === null) return;
+            const permissionMatch = message.body?.match(/^!(dis)?allowWhatTeX([ \n]\d+@[cg]\.us)?$/);
+            if (!permissionMatch) return;
 
             let id = (permissionMatch[2]?.slice(1) || message.chatId) as utils.ChatId;
 

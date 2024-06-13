@@ -13,6 +13,7 @@ const nextNumber: MessageListener = {
     type: wppconnect.MessageType.CHAT,
     callerHasPermission: caller => !caller.isMe,
     listener: (client, message) => {
+        if (!message.body) return;
         const prefix = message.body.toLowerCase().match(/^-?(0b|0b|0x|)/)?.[1];
         if (prefix === undefined) return;
 
